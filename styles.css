@@ -854,9 +854,10 @@ p { margin: 0; }
   a, .btn, .btn::before, .work-card__image, .work-card__caption { transition: none; }
   .btn:hover, .btn:focus-visible { transform: none; }
   .work-card:hover .work-card__image { transform: none; }
-  /* stop the review rows and let them be scrolled by hand instead */
-  .reviews__track { animation: none; }
-  .reviews__row { overflow-x: auto; }
+  /* NB: the review marquee is deliberately left running here — it is the
+     section's whole character, and stopping it under reduced motion left
+     the rows sitting dead on machines with Windows animations switched
+     off. Hover/focus still pauses it. */
   .site-header__inner[data-open="true"] .site-nav { animation: none; }
   .site-header__toggle-bar { transition: none; }
 }
