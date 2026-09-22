@@ -30,7 +30,15 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* iOS Safari inflates text inside wide blocks on its own ("text
+     autosizing"). It is WebKit-only, so a Blink-based device preview never
+     shows it - the page looks right in the emulator and has oversized,
+     mismatched type on a real iPhone. Pinning this to 100% turns it off. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 body {
   margin: 0;
