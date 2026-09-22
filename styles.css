@@ -2,15 +2,17 @@
    Only the two font tokens come from the Industry design system; every colour and
    measurement below is taken from the design file itself. */
 
+/* Palette saturation was raised 50% (HSL S x1.5, hue and lightness held).
+   Black, white and the Google mark in the review cards are left alone. */
 :root {
   --color-black: #000000;
   --color-white: #FFFFFF;
-  --color-ink: #1d1f20;
-  --color-sage: #768D8E;
-  --color-sage-dark: #5f7476;
-  --color-sand: #E3D0C2;
-  --color-sand-dark: #d6bfae;
-  --color-cream: #F5EEE9;
+  --color-ink: #1C1F21;
+  --color-sage: #709294;
+  --color-sage-dark: #59797C;
+  --color-sand: #EBCFBA;
+  --color-sand-dark: #E0BDA4;
+  --color-cream: #F8EEE6;
   --color-hero-panel: #FFFFFF;
   --color-divider: rgba(0, 0, 0, 0.12);
   --color-divider-strong: rgba(0, 0, 0, 0.14);
@@ -560,9 +562,9 @@ p { margin: 0; }
 }
 .review__avatar--sage  { background: var(--color-sage); }
 .review__avatar--sand  { background: var(--color-sand-dark); }
-.review__avatar--clay  { background: #c4a084; }
-.review__avatar--olive { background: #9aa88a; }
-.review__avatar--rose  { background: #b8908f; }
+.review__avatar--clay  { background: #D49E74; }
+.review__avatar--olive { background: #9AB082; }
+.review__avatar--rose  { background: #C28685; }
 .review__name {
   font-size: 17px;
   font-weight: 500;
@@ -574,7 +576,7 @@ p { margin: 0; }
 .review__stars {
   display: flex;
   gap: 3px;
-  color: #F2B23A;
+  color: #FFB62D;
 }
 .review__text {
   margin: 0;
@@ -693,16 +695,30 @@ p { margin: 0; }
 /* ─── responsive ──────────────────────────────────────────────────────── */
 
 @media (max-width: 1024px) {
-  :root { --section-pad: 80px; --header-offset: 160px; }
+  :root { --section-pad: 80px; --header-offset: 104px; }
 
-  /* Stack the split hero: photo on top, copy panel underneath. */
+  /* Stacked hero. The photo goes on top and the copy panel is pulled up
+     over its lower edge, so the two read as one composition instead of
+     two blocks separated by a field of white. */
   .hero__frame { grid-template-columns: 1fr; }
-  .hero__media { order: -1; min-height: 0; aspect-ratio: 16 / 9; }
-  .hero__content { padding: 72px var(--gutter); }
+  .hero__media { order: -1; min-height: 0; aspect-ratio: 3 / 2; }
+  .hero__image { object-position: 62% 46%; }
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    margin: -72px var(--gutter) 0;
+    padding: 40px 44px 48px;
+    gap: 24px;
+  }
   /* stacked layout: the title lives on the panel only, no colour split */
-  .hero__title { width: auto; font-size: 64px; max-width: 16ch; }
+  .hero__title {
+    width: auto;
+    max-width: none;
+    font-size: clamp(44px, 7.4vw, 64px);
+  }
   .hero__title-layer { clip-path: none; }
   .hero__title-layer--over { display: none; }
+  .hero__lede { max-width: 52ch; }
 
   .services__grid { gap: 48px; }
 
@@ -716,6 +732,30 @@ p { margin: 0; }
   .about__bar { grid-template-columns: 1fr 1fr; }
   .about__cell:nth-child(2) { border-right: 0; }
   .about__cell:nth-child(-n+2) { border-bottom: 1px solid var(--color-divider); }
+}
+
+/* Held in landscape a 3:2 photo is most of the screen, so trade the ratio
+   for a fixed slice of the viewport and let object-fit crop it. Using a
+   height rather than max-height keeps the photo full-bleed — capping an
+   aspect-ratio box shrinks its width to match. */
+@media (max-width: 1024px) and (orientation: landscape) {
+  .hero__media { aspect-ratio: auto; height: 48vh; }
+  .hero__content { margin-top: -56px; padding: 32px 44px 36px; gap: 18px; }
+  .hero__title { font-size: clamp(38px, 5.4vw, 54px); }
+}
+
+/* ── tablets: logo and nav share one row instead of stacking ─────────── */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .site-header { border-bottom: 1px solid var(--color-divider); }
+  .site-header__inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 15px var(--gutter);
+  }
+  .site-header__logo { height: 48px; }
+  .site-nav { gap: 34px; padding-bottom: 0; }
 }
 
 /* ── phones: the header collapses to one row and the nav moves behind the
@@ -749,13 +789,17 @@ p { margin: 0; }
   }
   .site-nav__link { padding: 13px 2px; font-size: 14px; }
 
-  .hero__content { padding: 44px var(--gutter) 48px; gap: 20px; }
-  .hero__media { aspect-ratio: 4 / 3; }
+  .hero__media { aspect-ratio: 5 / 4; }
+  .hero__content {
+    margin: -44px var(--gutter) 0;
+    padding: 28px 24px 32px;
+    gap: 18px;
+  }
   /* the design's hard line break is too long to fit a phone, so let the
      title wrap where it likes instead */
-  .hero__title { font-size: clamp(32px, 9vw, 46px); max-width: none; }
+  .hero__title { font-size: clamp(32px, 9vw, 46px); }
   .hero__title br { display: none; }
-  .hero__lede { font-size: 16px; }
+  .hero__lede { font-size: 16px; max-width: none; }
   .hero__actions { width: 100%; }
   .hero__actions .btn { width: 100%; justify-content: center; }
 
