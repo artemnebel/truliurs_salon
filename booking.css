@@ -1,0 +1,367 @@
+/* Truliurs — booking page.
+   Loads after styles.css, which supplies the tokens, base type, header,
+   footer and .btn styles. Only the form-specific pieces live here.
+
+   The form is sized to fit one desktop viewport (header included) so a
+   client never has to scroll to reach "Request this appointment". */
+
+:root {
+  --rule: rgba(0, 0, 0, 0.16);
+  --rule-strong: rgba(0, 0, 0, 0.25);
+}
+
+input, textarea, button { font: inherit; color: inherit; }
+textarea { resize: none; }
+
+/* Fill the viewport: header, form, footer — the form area takes whatever
+   height is left so the footer sits at the bottom of the screen. */
+body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+.site-footer { margin-top: auto; }
+
+/* current page in the shared nav */
+.site-nav__link[aria-current="page"] {
+  color: var(--color-sage);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+
+/* ---------- page ---------- */
+.booking {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 28px var(--gutter) 36px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 22px;
+}
+.booking__head {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.booking__head > div { display: flex; flex-direction: column; gap: 6px; }
+.booking__title { font-size: 38px; line-height: 1; }
+
+/* ---------- form layout ---------- */
+.form {
+  flex: 1; /* takes the leftover height so the page never floats mid-screen */
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+  align-items: stretch;
+}
+.form__col { display: flex; flex-direction: column; gap: 14px; }
+
+/* ---------- fields ---------- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+/* the details box soaks up whatever height is left on tall monitors */
+.field--grow { flex: 1; }
+.field--grow textarea { flex: 1; min-height: 72px; max-height: 420px; }
+.field > span {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.field__aside {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(0, 0, 0, 0.55);
+  margin-left: 8px;
+}
+.field input[type="text"],
+.field input[type="tel"],
+.field textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--color-white);
+  font-size: 15px;
+  line-height: 1.4;
+}
+.field input:focus,
+.field textarea:focus { border-color: var(--color-sage); }
+
+/* ---------- photo drops (compact landscape tiles) ---------- */
+.drop {
+  position: relative;
+  height: 96px;
+  border: 1px dashed var(--rule-strong);
+  background: var(--color-cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.drop:hover { border-color: var(--color-sage); }
+.drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.drop-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+.drop.has-image .drop-icon { display: none; }
+.drop-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  display: none;
+}
+.drop.has-image .drop-preview { display: block; opacity: 1; }
+/* once a photo is in, show it clean — no icon or text over it */
+.drop.has-image .drop-title,
+.drop.has-image .drop-name { display: none; }
+.drop-title {
+  position: relative;
+  font-family: var(--font-heading);
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.drop-name {
+  position: relative;
+  font-size: 12px;
+  color: var(--color-ink);
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- chips ---------- */
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  padding: 7px 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--color-sage); }
+.chip[aria-pressed="true"] { background: var(--color-sage); border-color: var(--color-sage); color: var(--color-white); }
+
+/* ---------- calendar (compact) ---------- */
+.calendar { border: 1px solid var(--rule); padding: 14px 16px; }
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.cal-head span {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.cal-nav {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--rule-strong);
+  background: var(--color-white);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+.cal-nav:hover { background: var(--color-cream); border-color: var(--color-sage); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-weekdays { margin-bottom: 4px; }
+.cal-weekdays span {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-sage);
+}
+.day {
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--rule);
+  background: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  cursor: pointer;
+}
+.day:hover:not(:disabled) { background: var(--color-cream); border-color: var(--color-sage); }
+.day:disabled { background: transparent; color: rgba(0, 0, 0, 0.28); cursor: default; }
+.day.blank { border: none; background: transparent; cursor: default; }
+.day[aria-pressed="true"],
+.day[aria-pressed="true"]:hover { background: var(--color-sage); border-color: var(--color-sage); color: var(--color-white); }
+.cal-foot {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+}
+.cal-foot .label {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ---------- submit ---------- */
+.submit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  padding-top: 4px;
+}
+.submit-row .btn { padding: 15px 30px; }
+.status { font-size: 13px; color: var(--color-ink); }
+.call {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-black);
+  padding-bottom: 2px;
+}
+
+/* slimmer footer so the whole page fits the viewport */
+.site-footer--slim { padding-top: 28px; padding-bottom: 28px; }
+.site-footer--slim .site-footer__logo { height: 28px; }
+
+/* short laptop screens (e.g. 1366×768): compress the header and spacing so
+   the submit button is still above the fold */
+@media (min-width: 1025px) and (max-height: 820px) {
+  .site-header__inner { padding-top: 14px; gap: 12px; }
+  .site-header__logo { height: 44px; }
+  .site-nav { padding-bottom: 12px; }
+  .booking { padding-top: 14px; padding-bottom: 12px; gap: 10px; }
+  .booking__head { padding-bottom: 8px; }
+  .booking__title { font-size: 32px; }
+  .form__col { gap: 10px; }
+  .drop { height: 80px; }
+  .field--grow textarea { flex: none; height: 64px; min-height: 0; }
+  .calendar { padding: 10px 14px; }
+  .day { height: 26px; }
+  .cal-head { margin-bottom: 6px; }
+  .cal-foot { margin-top: 6px; padding-top: 6px; }
+  .submit-row { gap: 6px; padding-top: 0; }
+  .submit-row .btn { padding: 12px 26px; }
+}
+
+/* tall, wide monitors (e.g. 4K / 1440p): scale the whole form up so it
+   fills the screen instead of sitting small in the top-left */
+@media (min-width: 1400px) and (min-height: 1100px) {
+  .booking { max-width: 1480px; padding-top: 40px; padding-bottom: 48px; gap: 32px; }
+  .booking__head { padding-bottom: 22px; }
+  .booking__head > div { gap: 10px; }
+  .booking__title { font-size: 52px; }
+  .form { gap: 56px; }
+  .form__col { gap: 22px; }
+  .grid-2 { gap: 22px; }
+  .field { gap: 9px; }
+  .field > span { font-size: 14px; }
+  .field__aside { font-size: 14px; }
+  .field input[type="text"],
+  .field input[type="tel"],
+  .field textarea { padding: 16px 16px; font-size: 18px; }
+  .field--grow textarea { max-height: none; }
+  /* the photo tiles and the details box share the leftover height */
+  .field--photos { flex: 2; }
+  .field--photos .grid-2 { flex: 1; }
+  .field--grow { flex: 3; }
+  .drop { height: auto; min-height: 180px; gap: 4px; }
+  .drop-icon { width: 32px; height: 32px; margin-bottom: 6px; }
+  .drop-title { font-size: 22px; }
+  .drop-name { font-size: 14px; }
+  .chips { gap: 10px; }
+  .chip { padding: 12px 18px; font-size: 14px; }
+  .calendar { padding: 22px 24px; }
+  .cal-head { margin-bottom: 16px; }
+  .cal-head span { font-size: 24px; }
+  .cal-nav { width: 40px; height: 40px; font-size: 20px; }
+  .cal-grid { gap: 8px; }
+  .cal-weekdays { margin-bottom: 8px; }
+  .cal-weekdays span { font-size: 13px; }
+  .day { height: auto; aspect-ratio: 1; font-size: 20px; }
+  .cal-foot { margin-top: 16px; padding-top: 16px; font-size: 17px; }
+  .cal-foot .label { font-size: 13px; }
+  .submit-row { gap: 12px; padding-top: 10px; }
+  .submit-row .btn { padding: 22px 40px; font-size: 16px; }
+  .status { font-size: 15px; }
+  .call { font-size: 14px; }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1024px) {
+  .form { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* On a phone the form stops trying to fit one screen and simply scrolls,
+   with every control sized for a fingertip. */
+@media (max-width: 720px) {
+  body { min-height: 0; }
+  .booking { padding: 20px var(--gutter) 32px; gap: 18px; }
+  .booking__head { padding-bottom: 14px; }
+  .booking__title { font-size: 32px; }
+
+  .form { flex: none; }
+  .form__col { gap: 18px; }
+
+  /* 16px is the threshold below which iOS zooms the page on focus */
+  .field input[type="text"],
+  .field input[type="tel"],
+  .field textarea {
+    font-size: 16px;
+    padding: 13px 14px;
+  }
+  .field--grow { flex: none; }
+  .field--grow textarea { flex: none; height: auto; min-height: 120px; max-height: none; }
+
+  .drop { height: 140px; }
+  .drop-icon { width: 26px; height: 26px; }
+  .drop-title { font-size: 16px; }
+
+  .chips { gap: 8px; }
+  .chip { flex: 1 1 0; text-align: center; padding: 13px 8px; letter-spacing: 0.1em; }
+
+  .calendar { padding: 12px 12px 14px; }
+  .cal-head { margin-bottom: 12px; }
+  .cal-nav { width: 42px; height: 42px; font-size: 20px; }
+  .cal-grid { gap: 3px; }
+  /* square cells keep every day at a tappable size on any phone width */
+  .day { height: auto; aspect-ratio: 1; font-size: 16px; }
+  .cal-foot { flex-direction: column; align-items: flex-start; gap: 4px; }
+
+  .submit-row { width: 100%; gap: 12px; padding-top: 2px; }
+  .submit-row .btn { width: 100%; justify-content: center; padding: 16px 24px; }
+  .status { font-size: 14px; }
+
+  .site-footer--slim { padding-top: 32px; padding-bottom: 32px; }
+}
+
+@media (max-width: 620px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .field__aside { display: block; margin: 2px 0 0; }
+}
+
+@media (max-width: 380px) {
+  .booking__title { font-size: 28px; }
+  .chip { font-size: 11px; padding: 12px 6px; letter-spacing: 0.06em; }
+  .day { font-size: 15px; }
+}

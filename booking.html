@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book an appointment — Truliurs</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="booking.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="index.html" class="site-header__logo-link">
+      <img src="assets/logo-black.png" alt="Truliurs — created for you" class="site-header__logo">
+    </a>
+    <button type="button" class="site-header__toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+      <span class="site-header__toggle-bar"></span>
+      <span class="site-header__toggle-bar"></span>
+      <span class="site-header__toggle-bar"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary">
+      <a href="index.html#services" class="site-nav__link">Services</a>
+      <a href="index.html#about" class="site-nav__link">About</a>
+      <a href="index.html#contact" class="site-nav__link">Contact</a>
+      <a href="booking.html" class="site-nav__link" aria-current="page">Booking</a>
+    </nav>
+  </div>
+</header>
+
+<main class="booking">
+  <div class="booking__head">
+    <div>
+      <span class="eyebrow">Book an appointment</span>
+      <h1 class="booking__title">Tell Gabby about your hair</h1>
+    </div>
+  </div>
+
+  <form id="booking-form" class="form">
+
+    <!-- left column: who you are, photos, history -->
+    <div class="form__col">
+      <div class="grid-2">
+        <label class="field">
+          <span>Full name</span>
+          <input type="text" name="name" placeholder="First and last" autocomplete="name" autocapitalize="words" required>
+        </label>
+        <label class="field">
+          <span>Phone</span>
+          <input type="tel" name="phone" placeholder="(215) 000-0000" autocomplete="tel" inputmode="tel" required>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>What you're after</span>
+        <input type="text" name="service" placeholder="Balayage, customized color, cut, extensions…">
+      </label>
+
+      <div class="field field--photos">
+        <span>Two photos <em class="field__aside">natural light, dry hair, no filter</em></span>
+        <div class="grid-2">
+          <label class="drop" id="drop-front">
+            <img alt="" class="drop-preview">
+            <img src="assets/upload.png" alt="" class="drop-icon">
+            <span class="drop-title">Front</span>
+            <span class="drop-name">Tap to upload</span>
+            <input type="file" name="photo_front" accept="image/*" required>
+          </label>
+          <label class="drop" id="drop-back">
+            <img alt="" class="drop-preview">
+            <img src="assets/upload.png" alt="" class="drop-icon">
+            <span class="drop-title">Back</span>
+            <span class="drop-name">Tap to upload</span>
+            <input type="file" name="photo_back" accept="image/*" required>
+          </label>
+        </div>
+      </div>
+
+
+      <label class="field field--grow">
+        <span>Hair history &amp; details <em class="field__aside">last 2 years — anything that's touched it</em></span>
+        <textarea name="history" rows="3" placeholder="Box dye or salon color, bleach, keratin, relaxers, extensions — dates, brands, how grown out your last color is. Nothing here disqualifies you."></textarea>
+      </label>
+    </div>
+
+    <!-- right column: date, time, send -->
+    <div class="form__col">
+      <div class="field">
+        <span>Preferred date</span>
+        <div class="calendar">
+          <div class="cal-head">
+            <button type="button" class="cal-nav" id="cal-prev" aria-label="Previous month">&lsaquo;</button>
+            <span id="cal-month"></span>
+            <button type="button" class="cal-nav" id="cal-next" aria-label="Next month">&rsaquo;</button>
+          </div>
+          <div class="cal-grid cal-weekdays">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="cal-grid" id="cal-days"></div>
+          <div class="cal-foot">
+            <span class="label">Selected</span>
+            <span id="cal-selected">No date chosen</span>
+          </div>
+          <input type="hidden" name="preferred_date" id="preferred-date">
+        </div>
+      </div>
+
+      <div class="field">
+        <span>Time of day</span>
+        <div class="chips" id="time-chips">
+          <button type="button" class="chip" aria-pressed="false">Morning</button>
+          <button type="button" class="chip" aria-pressed="false">Midday</button>
+          <button type="button" class="chip" aria-pressed="false">Afternoon</button>
+        </div>
+        <input type="hidden" name="preferred_time" id="preferred-time">
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn btn--primary">Request this appointment</button>
+        <span class="status" id="status">No payment now — you’ll get a text to confirm.</span>
+        <a class="call" href="tel:+12158168889">Or call (215) 816-8889</a>
+      </div>
+    </div>
+
+  </form>
+</main>
+
+<footer class="site-footer site-footer--slim">
+  <div class="site-footer__inner">
+    <img src="assets/logo-white.png" alt="Truliurs" class="site-footer__logo">
+    <nav class="site-footer__nav" aria-label="Footer">
+      <a href="index.html#services" class="site-footer__link">Services</a>
+      <a href="index.html#about" class="site-footer__link">About</a>
+      <a href="index.html#contact" class="site-footer__link">Contact</a>
+    </nav>
+    <span class="site-footer__meta">Abington, PA · © 2026 Truliurs</span>
+  </div>
+</footer>
+
+<script src="nav.js" defer></script>
+<script>
+(function () {
+  /* --- photo uploads --- */
+  ['front', 'back'].forEach(function (key) {
+    var drop = document.getElementById('drop-' + key);
+    var input = drop.querySelector('input[type=file]');
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      drop.classList.add('has-image');
+      drop.querySelector('.drop-preview').src = URL.createObjectURL(file);
+      drop.querySelector('.drop-name').textContent = file.name;
+    });
+  });
+
+  /* --- time chips (single-select) --- */
+  var timeChips = document.querySelectorAll('#time-chips .chip');
+  timeChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      timeChips.forEach(function (c) { c.setAttribute('aria-pressed', String(c === chip)); });
+      document.getElementById('preferred-time').value = chip.textContent.trim();
+    });
+  });
+
+  /* --- calendar --- */
+  var view = new Date();
+  view.setDate(1);
+  var selected = null;
+  var monthEl = document.getElementById('cal-month');
+  var daysEl = document.getElementById('cal-days');
+
+  function fmt(d) {
+    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
+  }
+
+  function render() {
+    monthEl.textContent = view.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    daysEl.innerHTML = '';
+    var year = view.getFullYear(), month = view.getMonth();
+    var lead = new Date(year, month, 1).getDay();
+    var count = new Date(year, month + 1, 0).getDate();
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+
+    for (var i = 0; i < lead; i++) {
+      var blank = document.createElement('span');
+      blank.className = 'day blank';
+      daysEl.appendChild(blank);
+    }
+    for (var d = 1; d <= count; d++) {
+      (function (d) {
+        var date = new Date(year, month, d);
+        var closed = date.getDay() === 0;          // studio closed Sundays
+        var off = date < today || closed;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'day';
+        btn.textContent = d;
+        btn.disabled = off;
+        btn.setAttribute('aria-pressed', String(!!selected && selected.toDateString() === date.toDateString()));
+        btn.addEventListener('click', function () {
+          selected = date;
+          document.getElementById('preferred-date').value = date.toISOString().slice(0, 10);
+          document.getElementById('cal-selected').textContent = fmt(date);
+          render();
+        });
+        daysEl.appendChild(btn);
+      })(d);
+    }
+  }
+
+  document.getElementById('cal-prev').addEventListener('click', function () {
+    view.setMonth(view.getMonth() - 1); render();
+  });
+  document.getElementById('cal-next').addEventListener('click', function () {
+    view.setMonth(view.getMonth() + 1); render();
+  });
+  render();
+
+  /* --- submit (front-end only) --- */
+  document.getElementById('booking-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('status').textContent = 'Sent — Gabby will text you within 24 hours.';
+  });
+})();
+</script>
+</body>
+</html>
