@@ -11,6 +11,9 @@
   function setOpen(open) {
     inner.setAttribute('data-open', String(open));
     toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Menu');
+    /* the sheet covers the viewport, so hold the page still behind it */
+    document.body.classList.toggle('nav-open', open);
   }
   setOpen(false);
 

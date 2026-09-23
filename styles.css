@@ -40,6 +40,8 @@ html {
   text-size-adjust: 100%;
 }
 
+body.nav-open { overflow: hidden; }
+
 body {
   margin: 0;
   background: var(--color-white);
@@ -214,13 +216,19 @@ p { margin: 0; }
 }
 .site-header__logo-link { display: block; }
 .site-header__logo { height: 58px; width: auto; }
+.site-header__logo--light { display: none; }
 
 .site-nav {
   display: flex;
-  gap: 44px;
   justify-content: center;
   padding-bottom: 22px;
 }
+.site-nav__links {
+  display: flex;
+  gap: 44px;
+}
+/* the social link and the two buttons belong to the phone overlay only */
+.site-nav__foot { display: none; }
 .site-nav__link {
   font-family: var(--font-heading);
   font-size: 15px;
@@ -771,7 +779,8 @@ p { margin: 0; }
     padding: 15px var(--gutter);
   }
   .site-header__logo { height: 48px; }
-  .site-nav { gap: 34px; padding-bottom: 0; }
+  .site-nav { padding-bottom: 0; }
+  .site-nav__links { gap: 34px; }
 }
 
 /* ── phones: the header collapses to one row and the nav moves behind the
@@ -790,20 +799,91 @@ p { margin: 0; }
   .site-header__logo { height: 40px; }
   .site-header__toggle { display: flex; }
 
+  /* ── full-screen menu ──────────────────────────────────────────────
+     Opening the toggle drops a solid black sheet over the whole viewport:
+     links centred and large, the Instagram mark and the two actions along
+     the bottom, logo and close button riding on top of it. The sheet is
+     fixed, so the header's own white background sits underneath it while
+     the logo and toggle are lifted above. */
   .site-nav {
     display: none;
-    grid-column: 1 / -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    height: 100dvh; /* keeps the buttons clear of the mobile browser bars */
+    z-index: 1;
     flex-direction: column;
-    gap: 0;
-    margin-top: 10px;
-    padding: 4px 0 6px;
-    border-top: 1px solid var(--color-divider);
+    background: var(--color-black);
+    padding: 84px var(--gutter) calc(26px + env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
   .site-header__inner[data-open="true"] .site-nav {
     display: flex;
-    animation: nav-drop 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: nav-sheet 260ms cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .site-nav__link { padding: 13px 2px; font-size: 14px; }
+  /* float the logo and the close button over the sheet */
+  .site-header__logo-link,
+  .site-header__toggle { position: relative; z-index: 2; }
+  .site-header__inner[data-open="true"] .site-header__logo { display: none; }
+  .site-header__inner[data-open="true"] .site-header__logo--light { display: block; }
+  .site-header__inner[data-open="true"] .site-header__toggle {
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+  }
+
+  .site-nav__links {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+  .site-nav__link {
+    padding: 10px 6px;
+    font-size: clamp(30px, 8.6vw, 44px);
+    letter-spacing: 0.06em;
+    line-height: 1.15;
+    color: var(--color-white);
+  }
+  .site-nav__link[aria-current="page"] {
+    color: var(--color-sand);
+    border-bottom: 0;
+  }
+
+  .site-nav__foot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    width: 100%;
+  }
+  .site-nav__social {
+    display: inline-flex;
+    padding: 8px;
+    color: var(--color-white);
+  }
+  .site-nav__actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+  .site-nav__actions .btn {
+    flex: 1 1 0;
+    justify-content: center;
+    padding-inline: 12px;
+  }
+
+  /* phone held sideways: the sheet has far less height to work with */
+  @media (max-height: 520px) {
+    .site-nav { padding-top: 68px; }
+    .site-nav__link { font-size: 22px; padding: 5px 6px; }
+    .site-nav__foot { gap: 12px; }
+  }
 
   .hero__image { aspect-ratio: 5 / 4; }
   .hero__content {
@@ -889,9 +969,9 @@ p { margin: 0; }
   .btn { padding-inline: 22px; font-size: 13px; letter-spacing: 0.16em; }
 }
 
-@keyframes nav-drop {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: none; }
+@keyframes nav-sheet {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ── touch devices: don't leave hover styles stuck after a tap ────────── */

@@ -18,11 +18,16 @@ textarea { resize: none; }
 body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
 .site-footer { margin-top: auto; }
 
-/* current page in the shared nav */
-.site-nav__link[aria-current="page"] {
-  color: var(--color-sage);
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 2px;
+/* Current page in the shared nav. Scoped to the horizontal nav — on a
+   phone the links live on the black menu sheet, which styles the current
+   page itself (sage on black is too muted, and the rule loads after
+   styles.css so it would otherwise win). */
+@media (min-width: 721px) {
+  .site-nav__link[aria-current="page"] {
+    color: var(--color-sage);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+  }
 }
 
 /* ---------- page ---------- */
