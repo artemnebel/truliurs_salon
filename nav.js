@@ -1,22 +1,66 @@
-/* Browsers re-apply your previous scroll position on reload and on back,
-   which on a one-page site means reopening it halfway down. Worse, the
-   global scroll-behavior: smooth turns that restoration into a visible
-   animated scroll. Start at the top instead; a #section link still jumps
-   normally, since that is fragment navigation rather than restoration. */
+/* Where the page starts. Loaded from <head> without defer so this runs
+   before the browser has acted on a #fragment. */
 (function () {
+  /* Browsers re-apply your last scroll position on reload, and the global
+     scroll-behavior: smooth turns that into a visible animated scroll. */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
-  window.addEventListener('pageshow', function () {
-    if (location.hash) return;
-    /* 'instant' so smooth scrolling does not animate the jump to the top */
+  function toTop() {
+    /* 'instant' so smooth scrolling does not animate the jump */
     try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }
     catch (e) { window.scrollTo(0, 0); }
+  }
+
+  /* Tapping a section link used to put #services in the address bar, and a
+     fragment copied from there travels with every link shared afterwards —
+     so the shared link reopened at "What we specialize in". A fragment is
+     honoured only when it came from a link on this site (the booking page
+     links to index.html#services); opened from a message or anywhere else,
+     the page starts at the top and the fragment is stripped so the next
+     copy of the URL is clean. */
+  var fromThisSite = false;
+  try {
+    fromThisSite = !!document.referrer &&
+      new URL(document.referrer).origin === location.origin;
+  } catch (e) {}
+
+  if (location.hash && !fromThisSite) {
+    try { history.replaceState(null, '', location.pathname + location.search); }
+    catch (e) {}
+    toTop();
+    window.addEventListener('DOMContentLoaded', toTop);
+    window.addEventListener('load', toTop);
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!location.hash) toTop();
   });
+})();
+
+/* Same-page section links scroll without writing a #fragment to the URL, so
+   the address bar stays clean and stays safe to copy and share. */
+(function () {
+  function wire() {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      var id = a.getAttribute('href').slice(1);
+      if (!id) return;
+      var target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wire);
+  } else { wire(); }
 })();
 
 /* Mobile header nav: the toggle only exists below 720px, but the state lives
    on .site-header__inner so the CSS can decide when to show the panel. */
 (function () {
+ function init() {
   var inner = document.querySelector('.site-header__inner');
   if (!inner) return;
 
@@ -51,4 +95,8 @@
   function sync() { if (desktop.matches) setOpen(false); }
   if (desktop.addEventListener) desktop.addEventListener('change', sync);
   else if (desktop.addListener) desktop.addListener(sync);
+ }
+ if (document.readyState === 'loading') {
+   document.addEventListener('DOMContentLoaded', init);
+ } else { init(); }
 })();
