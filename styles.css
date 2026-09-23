@@ -705,8 +705,20 @@ p { margin: 0; }
      over its lower edge, so the two read as one composition instead of
      two blocks separated by a field of white. */
   .hero__frame { grid-template-columns: 1fr; }
-  .hero__media { order: -1; min-height: 0; aspect-ratio: 3 / 2; }
-  .hero__image { object-position: 62% 46%; }
+  /* The photo is put back in normal flow here and sizes itself. The
+     desktop layout hangs it absolutely inside .hero__media, which leaves
+     that grid item with no in-flow content, so its height comes only from
+     aspect-ratio - and a stretched grid item sized that way collapses to
+     zero height in WebKit (iPhone/iPad), taking the photo with it. An
+     in-flow <img> with intrinsic dimensions cannot collapse. */
+  .hero__media { order: -1; min-height: 0; align-self: start; }
+  .hero__image {
+    position: static;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-position: 62% 46%;
+  }
   .hero__content {
     position: relative;
     z-index: 1;
@@ -742,7 +754,8 @@ p { margin: 0; }
    height rather than max-height keeps the photo full-bleed — capping an
    aspect-ratio box shrinks its width to match. */
 @media (max-width: 1024px) and (orientation: landscape) {
-  .hero__media { aspect-ratio: auto; height: 48vh; }
+  .hero__media { height: 48vh; }
+  .hero__image { height: 100%; aspect-ratio: auto; }
   .hero__content { margin-top: -56px; padding: 32px 44px 36px; gap: 18px; }
   .hero__title { font-size: clamp(38px, 5.4vw, 54px); }
 }
@@ -792,7 +805,7 @@ p { margin: 0; }
   }
   .site-nav__link { padding: 13px 2px; font-size: 14px; }
 
-  .hero__media { aspect-ratio: 5 / 4; }
+  .hero__image { aspect-ratio: 5 / 4; }
   .hero__content {
     margin: -44px var(--gutter) 0;
     padding: 28px 24px 32px;
