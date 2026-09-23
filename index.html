@@ -295,16 +295,23 @@
   }
 
   var tracks = document.querySelectorAll('.reviews__track');
-  var split = Math.ceil(reviews.length / 2);
-  var groups = [reviews.slice(0, split), reviews.slice(split)];
+  /* phones get every review in a single row; wider screens split them over two */
+  var phone = window.matchMedia('(max-width: 720px)');
 
-  tracks.forEach(function (track, row) {
-    var frag = document.createDocumentFragment();
-    groups[row].forEach(function (r, i) { frag.appendChild(card(r, i + row * split)); });
-    track.appendChild(frag);
-    /* ~7s per card keeps both rows moving at the same speed */
-    track.style.setProperty('--marquee-duration', (groups[row].length * 7) + 's');
-  });
+  function build() {
+    var split = phone.matches ? reviews.length : Math.ceil(reviews.length / 2);
+    var groups = [reviews.slice(0, split), reviews.slice(split)];
+    tracks.forEach(function (track, row) {
+      track.textContent = '';
+      track.parentNode.hidden = !groups[row].length;
+      var frag = document.createDocumentFragment();
+      groups[row].forEach(function (r, i) { frag.appendChild(card(r, i + row * split)); });
+      track.appendChild(frag);
+      /* ~7s per card keeps both rows moving at the same speed */
+      track.style.setProperty('--marquee-duration', (groups[row].length * 7) + 's');
+    });
+  }
+  build();
 
   /* trim the originals, then (re)build the duplicate set that makes the loop seamless */
   function fitAll() {
@@ -321,6 +328,8 @@
   }
 
   var timer;
+  function rebuild() { build(); fitAll(); }
+  if (phone.addEventListener) phone.addEventListener('change', rebuild); else phone.addListener(rebuild);
   window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(fitAll, 150); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll); else fitAll();
 })();
