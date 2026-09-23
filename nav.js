@@ -1,3 +1,19 @@
+/* Browsers re-apply your previous scroll position on reload and on back,
+   which on a one-page site means reopening it halfway down. Worse, the
+   global scroll-behavior: smooth turns that restoration into a visible
+   animated scroll. Start at the top instead; a #section link still jumps
+   normally, since that is fragment navigation rather than restoration. */
+(function () {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  window.addEventListener('pageshow', function () {
+    if (location.hash) return;
+    /* 'instant' so smooth scrolling does not animate the jump to the top */
+    try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }
+    catch (e) { window.scrollTo(0, 0); }
+  });
+})();
+
 /* Mobile header nav: the toggle only exists below 720px, but the state lives
    on .site-header__inner so the CSS can decide when to show the panel. */
 (function () {
